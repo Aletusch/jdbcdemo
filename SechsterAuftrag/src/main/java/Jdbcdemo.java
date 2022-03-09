@@ -10,11 +10,11 @@ public class Jdbcdemo {
         UpdateStudentDemo(4,"neuername","neueEmail@mail.com");
         selectAllDemo();
         deleteStudentDemo(5);
-        findAllByName();
+        findAllByNameLike("tito");
 
     }
 
-    private static void findAllByName() {
+    private static void findAllByNameLike(String pattern) {
         System.out.println("Find all by name Demo mit JDBC");
 
         String connectionUrl = "jdbc:mysql://localhost:3306/jdbcdemo";
@@ -22,7 +22,8 @@ public class Jdbcdemo {
         String pwd = "";
         try (Connection conn = DriverManager.getConnection(connectionUrl, user, pwd)) {
             System.out.println("Verbindung zur DB hergestellt!");
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM `student`WHERE LOWER(`student`.`name`) LIKE  `%tito%`");
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM `student`WHERE `student`.`name` LIKE  ?");
+            preparedStatement.setString(1,"%"+ pattern+ "%");
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
